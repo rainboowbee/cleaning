@@ -47,7 +47,12 @@ export function LeadForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-white p-8 rounded-2xl shadow-xl border border-blue-100 relative overflow-hidden">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-5 bg-white/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border-4 border-transparent bg-clip-padding relative overflow-hidden group"
+      style={{ boxShadow: "0 8px 32px 0 rgba(0,0,0,0.10)" }}
+    >
+      <div className="absolute inset-0 pointer-events-none rounded-3xl border-2 border-transparent group-focus-within:border-blue-400 group-hover:border-blue-300 transition-all duration-300" style={{background: "linear-gradient(135deg, #60a5fa33 0%, #a7f3d033 100%)"}} />
       <AnimatePresence>
         {success && (
           <motion.div
@@ -55,7 +60,7 @@ export function LeadForm() {
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.7 }}
-            className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10"
+            className="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-10 rounded-3xl"
           >
             <motion.svg
               width="64"
@@ -96,7 +101,7 @@ export function LeadForm() {
         placeholder="Имя"
         value={name}
         onChange={e => setName(e.target.value)}
-        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+        className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg placeholder-gray-400"
         required
         disabled={success}
       />
@@ -105,24 +110,24 @@ export function LeadForm() {
         placeholder="Телефон"
         value={phone}
         onChange={e => setPhone(e.target.value)}
-        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+        className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg placeholder-gray-400"
         required
         disabled={success}
       />
       <select
         value={contactType}
         onChange={e => setContactType(e.target.value)}
-        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+        className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg"
         disabled={success}
       >
         {contactOptions.map(opt => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
       </select>
-      {error && <div className="text-red-500 text-sm">{error}</div>}
+      {error && <div className="text-red-500 text-sm font-medium text-center">{error}</div>}
       <button
         type="submit"
-        className="bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 shadow-md mt-2"
+        className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-3 rounded-xl font-semibold text-lg shadow-md hover:from-blue-600 hover:to-blue-800 transition disabled:opacity-50 mt-2"
         disabled={loading || success}
       >
         {loading ? (
