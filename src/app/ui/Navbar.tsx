@@ -6,7 +6,7 @@ const links = [
   { href: "#services", label: "Услуги" },
   { href: "#gallery", label: "Примеры работ" },
   { href: "#reviews", label: "Отзывы" },
-  { href: "#leadform", label: "Оставить заявку" },
+  { href: "#calc", label: "Калькулятор" },
 ];
 
 export function Navbar() {

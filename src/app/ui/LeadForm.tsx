@@ -8,7 +8,7 @@ const contactOptions = [
   { value: "TELEGRAM", label: "Telegram" },
 ];
 
-export function LeadForm() {
+export function LeadForm({ calcData }: { calcData?: any }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [contactType, setContactType] = useState("PHONE");
@@ -32,7 +32,7 @@ export function LeadForm() {
     const res = await fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, phone, contactType }),
+      body: JSON.stringify({ name, phone, contactType, calcData }),
     });
     setLoading(false);
     if (res.ok) {

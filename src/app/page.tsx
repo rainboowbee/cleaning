@@ -4,6 +4,7 @@ import { Gallery } from "./ui/Gallery";
 import { Reviews } from "./ui/Reviews";
 import { ServiceCards } from "./ui/ServiceCards";
 import { Navbar } from "./ui/Navbar";
+import CalcBlock from "./ui/CalcBlock";
 
 export default function Home() {
   return (
@@ -14,12 +15,6 @@ export default function Home() {
         <section className="w-full bg-gradient-to-r from-blue-600 to-blue-400 py-16 flex flex-col items-center text-center px-4 shadow-lg rounded-b-3xl">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-white drop-shadow-lg">Профессиональная уборка квартир и офисов</h1>
           <p className="text-lg md:text-xl mb-8 max-w-2xl text-blue-100">Чистота и порядок без хлопот — доверьте уборку профессионалам!</p>
-          <a
-            href="#leadform"
-            className="bg-white text-blue-700 px-10 py-4 rounded-full text-lg font-bold shadow-lg hover:scale-105 hover:bg-blue-100 transition-all duration-300 border-2 border-blue-600"
-          >
-            Заказать уборку
-          </a>
         </section>
 
         {/* О нас */}
@@ -67,13 +62,9 @@ export default function Home() {
           <Reviews />
         </section>
 
-        {/* Форма заявки */}
-        <section className="w-full bg-gradient-to-r from-blue-100 to-blue-300 py-14 px-4 shadow-inner" id="leadform">
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Оставьте заявку</h2>
-          <div className="max-w-md mx-auto">
-            <LeadForm />
-          </div>
-        </section>
+        <div className="flex justify-center mt-8">
+          <CalcBlock />
+        </div>
       </main>
     </>
   );

@@ -8,6 +8,12 @@ type Lead = {
   contactType: "PHONE" | "WHATSAPP" | "TELEGRAM";
   status: "PENDING" | "PROCESSED";
   createdAt: string;
+  serviceType?: string;
+  area?: number;
+  rooms?: number;
+  hasPets?: boolean;
+  trashRemoval?: boolean;
+  comment?: string;
 };
 
 export default function AdminPanel() {
@@ -59,6 +65,12 @@ export default function AdminPanel() {
               <th className="p-2 border">Имя</th>
               <th className="p-2 border">Телефон</th>
               <th className="p-2 border">Связь</th>
+              <th className="p-2 border">Тип услуги</th>
+              <th className="p-2 border">Площадь</th>
+              <th className="p-2 border">Комнат</th>
+              <th className="p-2 border">Животные</th>
+              <th className="p-2 border">Вывоз мусора</th>
+              <th className="p-2 border">Комментарий</th>
               <th className="p-2 border">Статус</th>
               <th className="p-2 border">Дата</th>
               <th className="p-2 border">Действия</th>
@@ -71,10 +83,14 @@ export default function AdminPanel() {
                 <td className="border p-2">{lead.name}</td>
                 <td className="border p-2">{lead.phone}</td>
                 <td className="border p-2">{lead.contactType}</td>
-                <td className="border p-2">
-                  {lead.status === "PENDING" ? "В ожидании" : "Обработано"}
-                </td>
-                <td className="border p-2">{new Date(lead.createdAt).toLocaleString()}</td>
+                <td className="border p-2">{lead.serviceType || "-"}</td>
+                <td className="border p-2">{lead.area ?? "-"}</td>
+                <td className="border p-2">{lead.rooms ?? "-"}</td>
+                <td className="border p-2">{lead.hasPets === true ? "Да" : lead.hasPets === false ? "Нет" : "-"}</td>
+                <td className="border p-2">{lead.trashRemoval === true ? "Да" : lead.trashRemoval === false ? "Нет" : "-"}</td>
+                <td className="border p-2">{lead.comment || "-"}</td>
+                <td className="border p-2">{lead.status === "PENDING" ? "В ожидании" : "Обработано"}</td>
+                <td className="border p-2">{new Date(lead.createdAt).toLocaleString("ru-RU", { timeZone: "Europe/Moscow" })}</td>
                 <td className="border p-2">
                   {lead.status === "PENDING" ? (
                     <button

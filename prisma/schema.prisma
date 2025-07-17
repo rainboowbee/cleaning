@@ -14,6 +14,12 @@ model Lead {
   contactType  ContactType
   status       LeadStatus @default(PENDING)
   createdAt    DateTime  @default(now())
+  serviceType   String? // Тип услуги
+  area          Int?    // Площадь
+  rooms         Int?    // Количество комнат
+  hasPets       Boolean? // Есть ли животные
+  trashRemoval  Boolean? // Требуется ли вывоз мусора/травы
+  comment       String? // Дополнительные пожелания
 }
 
 enum ContactType {

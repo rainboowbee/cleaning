@@ -11,7 +11,7 @@ function isValidPhone(phone: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, phone, contactType } = await req.json();
+    const { name, phone, contactType, calcData } = await req.json();
     if (!name || !phone || !contactType) {
       return NextResponse.json({ error: "Заполните все поля" }, { status: 400 });
     }
@@ -22,9 +22,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Некорректный способ связи" }, { status: 400 });
     }
 
-    // Сохраняем заявку в БД
+    // Сохраняем заявку в БД с поддержкой calcData
     await prisma.lead.create({
-      data: { name, phone, contactType },
+      data: {
+        name,
+        phone,
+        contactType,
+        serviceType: calcData?.serviceType || undefined,
+        area: calcData?.area ?? undefined,
+        rooms: calcData?.rooms ?? undefined,
+        hasPets: typeof calcData?.hasPets === 'boolean' ? calcData.hasPets : undefined,
+        trashRemoval: typeof calcData?.trashRemoval === 'boolean' ? calcData.trashRemoval : undefined,
+        comment: calcData?.comment || undefined,
+      },
     });
 
     // Email уведомление
