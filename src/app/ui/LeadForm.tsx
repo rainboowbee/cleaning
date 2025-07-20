@@ -8,7 +8,7 @@ const contactOptions = [
   { value: "TELEGRAM", label: "Telegram" },
 ];
 
-export function LeadForm({ calcData }: { calcData?: any }) {
+export function LeadForm({ calcData }: { calcData?: unknown }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [contactType, setContactType] = useState("PHONE");

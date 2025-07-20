@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { LeadForm } from "./ui/LeadForm";
 import { Gallery } from "./ui/Gallery";
 import { Reviews } from "./ui/Reviews";
 import { ServiceCards } from "./ui/ServiceCards";

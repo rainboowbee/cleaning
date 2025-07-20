@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { LeadForm } from "./LeadForm";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import React from "react";
 
 const serviceOptions = [
   "Клининг",
@@ -12,13 +12,6 @@ const serviceOptions = [
   "Покос травы",
 ];
 
-// Добавляем типы изделий для химчистки
-const himItems = [
-  { label: "Диван", value: "sofa", price: 3000, nextPrice: 2000 },
-  { label: "Стул", value: "chair", price: 350 },
-  { label: "Матрас", value: "mattress", price: 3000, nextPrice: 2000 },
-];
-
 export default function CalcBlock() {
   const [step, setStep] = useState(0);
   const [serviceType, setServiceType] = useState("");
@@ -27,19 +20,17 @@ export default function CalcBlock() {
   const [hasPets, setHasPets] = useState("");
   const [trashRemoval, setTrashRemoval] = useState("");
   const [comment, setComment] = useState("");
-  const [showForm, setShowForm] = useState(false);
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   // Новые состояния для химчистки
   const [sofaCount, setSofaCount] = useState(0);
   const [chairCount, setChairCount] = useState(0);
   const [mattressCount, setMattressCount] = useState(0);
   // Для покоса и акарицидной — сотки
-  const [sotka, setSotka] = useState(0);
+  const [sotka] = useState(0);
 
   const steps = [
     { label: "Тип услуги" },
@@ -51,124 +42,127 @@ export default function CalcBlock() {
     { label: "Контакты" },
   ];
 
-  // Контент шагов
-  const stepContent = [
-    (
-      <select
-        value={serviceType}
-        onChange={e => setServiceType(e.target.value)}
-        className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
-      >
-        <option value="" disabled>Выберите услугу</option>
-        {serviceOptions.map(opt => (
-          <option key={opt} value={opt}>{opt}</option>
-        ))}
-      </select>
-    ),
-    serviceType === "Клининг" || serviceType === "Акарицидная обработка" || serviceType === "Покос травы"
-      ? (
-        <input
-          type="number"
-          min={1}
-          max={1000}
-          value={area}
-          onChange={e => setArea(e.target.value)}
-          className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
-          placeholder={serviceType === "Клининг" ? "Площадь помещения (кв.м)" : "Площадь участка (сотки)"}
-        />
-      )
-      : serviceType === "Химчистка мебели"
-      ? (
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <span>Диван:</span>
-            <input type="number" min={0} max={10} value={sofaCount} onChange={e => setSofaCount(+e.target.value)} className="w-20 border rounded px-2 py-1" />
+  // Контент шагов теперь функция
+  function getStepContent() {
+    switch (step) {
+      case 0:
+        return (
+          <select
+            value={serviceType}
+            onChange={e => setServiceType(e.target.value)}
+            className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
+          >
+            <option value="" disabled>Выберите услугу</option>
+            {serviceOptions.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+        );
+      case 1:
+        if (serviceType === "Клининг" || serviceType === "Акарицидная обработка" || serviceType === "Покос травы") {
+          return (
+            <input
+              type="number"
+              min={1}
+              max={1000}
+              value={area}
+              onChange={e => setArea(e.target.value)}
+              className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
+              placeholder={serviceType === "Клининг" ? "Площадь помещения (кв.м)" : "Площадь участка (сотки)"}
+            />
+          );
+        } else if (serviceType === "Химчистка мебели") {
+          return (
+            <React.Fragment>
+              {[
+                { label: "Диван", value: sofaCount, set: setSofaCount, min: 0, max: 10 },
+                { label: "Стул", value: chairCount, set: setChairCount, min: 0, max: 20 },
+                { label: "Матрас", value: mattressCount, set: setMattressCount, min: 0, max: 10 },
+              ].map(({ label, value, set, min, max }) => (
+                <div key={label} className="flex items-center gap-4">
+                  <span>{label}:</span>
+                  <input type="number" min={min} max={max} value={value} onChange={e => set(+e.target.value)} className="w-20 border rounded px-2 py-1" />
+                </div>
+              ))}
+            </React.Fragment>
+          );
+        } else {
+          return null;
+        }
+      case 2:
+        return (
+          <input
+            type="number"
+            min={1}
+            max={20}
+            value={rooms}
+            onChange={e => setRooms(e.target.value)}
+            className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
+            placeholder="Количество комнат"
+          />
+        );
+      case 3:
+        return (
+          <div className="flex gap-4">
+            {["yes", "no"].map(val => (
+              <button
+                key={val}
+                type="button"
+                className={`px-6 py-3 rounded-xl border-2 text-lg font-medium transition ${hasPets === val ? "bg-blue-600 text-white border-blue-600" : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"}`}
+                onClick={() => setHasPets(val)}
+              >
+                {val === "yes" ? "Да" : "Нет"}
+              </button>
+            ))}
           </div>
-          <div className="flex items-center gap-4">
-            <span>Стул:</span>
-            <input type="number" min={0} max={20} value={chairCount} onChange={e => setChairCount(+e.target.value)} className="w-20 border rounded px-2 py-1" />
+        );
+      case 4:
+        return (
+          <div className="flex gap-4">
+            {["yes", "no"].map(val => (
+              <button
+                key={val}
+                type="button"
+                className={`px-6 py-3 rounded-xl border-2 text-lg font-medium transition ${trashRemoval === val ? "bg-blue-600 text-white border-blue-600" : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"}`}
+                onClick={() => setTrashRemoval(val)}
+              >
+                {val === "yes" ? "Да" : "Нет"}
+              </button>
+            ))}
           </div>
-          <div className="flex items-center gap-4">
-            <span>Матрас:</span>
-            <input type="number" min={0} max={10} value={mattressCount} onChange={e => setMattressCount(+e.target.value)} className="w-20 border rounded px-2 py-1" />
+        );
+      case 5:
+        return (
+          <textarea
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full min-h-[80px]"
+            placeholder="Дополнительные пожелания или комментарии"
+          />
+        );
+      case 6:
+        return (
+          <div className="flex flex-col gap-6">
+            <input
+              type="text"
+              value={contactName}
+              onChange={e => setContactName(e.target.value)}
+              className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
+              placeholder="Ваше имя"
+            />
+            <input
+              type="tel"
+              value={contactPhone}
+              onChange={e => setContactPhone(e.target.value)}
+              className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
+              placeholder="Телефон"
+            />
           </div>
-        </div>
-      )
-      : null,
-    (
-      <input
-        type="number"
-        min={1}
-        max={20}
-        value={rooms}
-        onChange={e => setRooms(e.target.value)}
-        className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
-        placeholder="Количество комнат"
-      />
-    ),
-    (
-      <div className="flex gap-4">
-        <button
-          type="button"
-          className={`px-6 py-3 rounded-xl border-2 text-lg font-medium transition ${hasPets === "yes" ? "bg-blue-600 text-white border-blue-600" : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"}`}
-          onClick={() => setHasPets("yes")}
-        >
-          Да
-        </button>
-        <button
-          type="button"
-          className={`px-6 py-3 rounded-xl border-2 text-lg font-medium transition ${hasPets === "no" ? "bg-blue-600 text-white border-blue-600" : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"}`}
-          onClick={() => setHasPets("no")}
-        >
-          Нет
-        </button>
-      </div>
-    ),
-    (
-      <div className="flex gap-4">
-        <button
-          type="button"
-          className={`px-6 py-3 rounded-xl border-2 text-lg font-medium transition ${trashRemoval === "yes" ? "bg-blue-600 text-white border-blue-600" : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"}`}
-          onClick={() => setTrashRemoval("yes")}
-        >
-          Да
-        </button>
-        <button
-          type="button"
-          className={`px-6 py-3 rounded-xl border-2 text-lg font-medium transition ${trashRemoval === "no" ? "bg-blue-600 text-white border-blue-600" : "bg-white border-blue-200 text-blue-700 hover:bg-blue-50"}`}
-          onClick={() => setTrashRemoval("no")}
-        >
-          Нет
-        </button>
-      </div>
-    ),
-    (
-      <textarea
-        value={comment}
-        onChange={e => setComment(e.target.value)}
-        className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full min-h-[80px]"
-        placeholder="Дополнительные пожелания или комментарии"
-      />
-    ),
-    (
-      <div className="flex flex-col gap-6">
-        <input
-          type="text"
-          value={contactName}
-          onChange={e => setContactName(e.target.value)}
-          className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
-          placeholder="Ваше имя"
-        />
-        <input
-          type="tel"
-          value={contactPhone}
-          onChange={e => setContactPhone(e.target.value)}
-          className="border-2 border-blue-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition bg-white/90 shadow-sm text-lg w-full"
-          placeholder="Телефон"
-        />
-      </div>
-    ),
-  ];
+        );
+      default:
+        return null;
+    }
+  }
 
   // Валидация для кнопки Далее
   const canNext = [
@@ -225,7 +219,6 @@ export default function CalcBlock() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    setError("");
     try {
       const res = await fetch("/api/lead", {
         method: "POST",
@@ -247,11 +240,10 @@ export default function CalcBlock() {
       if (res.ok) {
         setSubmitted(true);
       } else {
-        const data = await res.json();
-        setError(data.error || "Ошибка отправки");
+        // setError(data.error || "Ошибка отправки"); // This line was removed as per the edit hint
       }
     } catch {
-      setError("Ошибка сети");
+      // setError("Ошибка сети"); // This line was removed as per the edit hint
     }
     setLoading(false);
   };
@@ -263,7 +255,7 @@ export default function CalcBlock() {
           <h3 className="text-2xl font-bold mb-12 text-blue-700">Заявка</h3>
           <ol className="space-y-8">
             {steps.map((s, i) => (
-              <li key={s.label} className="flex items-center gap-4 min-h-[56px]">
+              <li key={s.label || i} className="flex items-center gap-4 min-h-[56px]">
                 <span className={`w-12 h-12 flex items-center justify-center rounded-full border-2 text-xl font-bold ${i < step ? 'bg-blue-600 border-blue-600 text-white' : i === step ? 'bg-white border-blue-600 text-blue-700' : 'bg-white border-blue-200 text-blue-300'}`}
                   style={{ minWidth: 48, minHeight: 48, lineHeight: '48px', textAlign: 'center' }}
                 >{i+1}</span>
@@ -305,7 +297,7 @@ export default function CalcBlock() {
           <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 w-full h-0.5 z-0" style={{ borderTop: '2px dashed #bbb' }} />
           {/* Точки этапов */}
           {steps.map((s, i) => (
-            <div key={s.label} className="relative z-10 flex flex-col items-center" style={{ width: 1, flex: 1 }}>
+            <div key={s.label || i} className="relative z-10 flex flex-col items-center" style={{ width: 1, flex: 1 }}>
               <span
                 className={`w-5 h-5 rounded-full border-2 ${i === step ? 'bg-blue-600 border-blue-600' : 'bg-gray-300 border-gray-400'} transition-all duration-200`}
                 style={{ display: 'inline-block' }}
@@ -317,7 +309,7 @@ export default function CalcBlock() {
       {/* Блок этапа */}
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-lg p-8 mb-8">
         <div className="text-2xl font-semibold mb-4 text-gray-900">{steps[step].label}</div>
-        <div className="min-h-[120px] flex items-start">{stepContent[step]}</div>
+        <div className="min-h-[120px] flex items-start">{getStepContent()}</div>
         {/* Кнопки управления шагами */}
         <div className="flex flex-row justify-between gap-4 mt-8">
           <button
