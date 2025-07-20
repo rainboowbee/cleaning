@@ -167,7 +167,9 @@ export default function CalcBlock() {
   // Валидация для кнопки Далее
   const canNext = [
     !!serviceType,
-    !!area && +area > 0,
+    serviceType === "Химчистка мебели"
+      ? (sofaCount > 0 || chairCount > 0 || mattressCount > 0)
+      : !!area && +area > 0,
     !!rooms && +rooms > 0,
     hasPets === "yes" || hasPets === "no",
     trashRemoval === "yes" || trashRemoval === "no",
