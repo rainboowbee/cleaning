@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
         hasPets: typeof calcData?.hasPets === 'boolean' ? calcData.hasPets : undefined,
         trashRemoval: typeof calcData?.trashRemoval === 'boolean' ? calcData.trashRemoval : undefined,
         comment: calcData?.comment || undefined,
+        furniture: calcData?.furniture ?? undefined,
       },
     });
 

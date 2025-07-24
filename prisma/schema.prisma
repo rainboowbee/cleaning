@@ -20,6 +20,7 @@ model Lead {
   hasPets       Boolean? // Есть ли животные
   trashRemoval  Boolean? // Требуется ли вывоз мусора/травы
   comment       String? // Дополнительные пожелания
+  furniture     Json?   // Массив объектов { name, count } для химчистки мебели
 }
 
 enum ContactType {
