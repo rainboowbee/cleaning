@@ -4,6 +4,7 @@ import { Reviews } from "./ui/Reviews";
 import { ServiceCards } from "./ui/ServiceCards";
 import { Navbar } from "./ui/Navbar";
 import CalcBlock from "./ui/CalcBlock";
+import FAQ from "./ui/FAQ";
 
 export default function Home() {
   return (
@@ -59,6 +60,12 @@ export default function Home() {
         <section className="max-w-3xl w-full px-4" id="reviews">
           <h2 className="text-2xl font-bold mb-4 text-blue-700">Отзывы клиентов</h2>
           <Reviews />
+        </section>
+
+        {/* FAQ */}
+        <section className="max-w-3xl w-full px-4" id="faq">
+          <h2 className="text-2xl font-bold mb-8 text-blue-700">Часто задаваемые вопросы</h2>
+          <FAQ />
         </section>
 
         <div className="flex justify-center mt-8">
